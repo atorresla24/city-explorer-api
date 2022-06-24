@@ -42,6 +42,28 @@ app.get('/weather', async (request, response) => {
   //console.log(result);
 })
 
+app.get ('/movies', getMovies);
+
+async function getMovies(request, response){
+  try{
+    let searchQuery = request.query.searchQuery
+    let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${searchQuery}`
+    let cityMovie = await axios.get(url);
+    let movieArray = cityMovie.data.results.map(movie => new Movie(movie));
+    //console.log(cityMovie.data);
+    response.send(movieArray);
+} catch (error){
+  console.log(error);
+}
+}
+
+class Movie{
+  constructor(movieObj){
+    this.title = movieObj.title;
+    this.description = movieObj.overview;
+  }
+}
+
 app.use((error, request, response, next) => {
   response.status(500).send(error.message);
 })
