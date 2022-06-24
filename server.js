@@ -6,7 +6,7 @@ const express = require('express');
 require('dotenv').config();
 let data = require('./data/weather.json');
 const cors = require('cors');
-const { nextTick } = require('process');
+const axios = require('axios');
 
 
 const app = express();
@@ -19,19 +19,27 @@ class Forecast{
   }
 }
 
-app.get('/weather', (request, response) => {
+app.get('/weather', async (request, response) => {
   try{
   const searchQuery = request.query.searchQuery;
   console.log(searchQuery);
-  let searchResult = data.find(object => object.city_name === searchQuery);
-  let dataSend = searchResult.data.map(day => new Forecast(day));
-  response.send(dataSend);
+  let lat = request.query.lat;
+  console.log(lat);
+  let lon = request.query.lon;
+  console.log(lon);
+  //let searchResult = data.find(object => object.city_name === searchQuery);
+  let url = `http://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&lang=en&units=I&days=5&lat=${lat}&lon=${lon}`;
+  let weatherInfo = await axios.get(url);
+  let weatherData = weatherInfo.data.data.map(sky => new Forecast(sky));
+  response.send(weatherData);
+  //let dataSend = searchResult.data.data.map(day => new Forecast(day));
+  //response.send(dataSend);
 } catch (error) {
-  next(error);
+  console.log(error);
 }
 
   //const result = new Forecast(searchResult);
-  console.log(result);
+  //console.log(result);
 })
 
 app.use((error, request, response, next) => {
@@ -41,11 +49,11 @@ app.use((error, request, response, next) => {
 const PORT = process.env.PORT || 3002;
 
 app.get('/', (request, response) => {
-  response.send('hello from our server');
+  response.status(200).send('HELLO!');
 })
 
 app.get('*', (request, response) => {
-  response.send('Get out!');
+  response.status(404).send('Get out!');
 })
 
 
