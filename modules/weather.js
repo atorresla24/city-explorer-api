@@ -14,8 +14,10 @@ async function getWeather(request, response, next){
     let weatherData = weatherInfo.data.data.map(sky => new Forecast(sky));
     //let dataSend = searchResult.data.data.map(day => new Forecast(day));
     //response.send(dataSend);
-    response.status(500).send(weatherData);
+    response.status(200).send(weatherData);
   } catch (error) {
+    console.log('getWeather error');
+    console.log(error);
     next (error);
   }
 }

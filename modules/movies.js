@@ -9,7 +9,7 @@ async function getMovies(request, response, next){
     let cityMovie = await axios.get(url);
     let movieArray = cityMovie.data.results.map(movie => new Movie(movie));
     //console.log(cityMovie.data);
-    response.status(500).send(movieArray);
+    response.status(200).send(movieArray);
   } catch (error){
     next(error);
   }
