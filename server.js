@@ -15,7 +15,7 @@ const app = express();
 app.use(cors());
 
 app.get('/weather', getWeather);
-app.get('./movies', getMovies);
+app.get('/movies', getMovies);
 
 function getWeather(request, response) {
   const { lat, lon } = request.query;

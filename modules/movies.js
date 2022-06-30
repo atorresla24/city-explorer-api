@@ -42,7 +42,7 @@ async function getMovies(searchQuery) {
 
 function parseMovie(movieData){
   try{
-    const movieSummaries = movieData.data.map(movie => {
+    const movieSummaries = movieData.results.map(movie => {
       return new Movie(movie);
     });
     return Promise.resolve(movieSummaries);
